@@ -9,3 +9,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: none
+
+springdoc:
+  paths-to-match: /api/v1/**
+  swagger-ui:
+    use-root-path: true
