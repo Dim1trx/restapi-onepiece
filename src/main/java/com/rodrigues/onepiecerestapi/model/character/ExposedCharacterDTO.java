@@ -1,17 +1,28 @@
 package com.rodrigues.onepiecerestapi.model.character;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rodrigues.onepiecerestapi.model.crew.CrewDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
 import java.util.Set;
 
 public class ExposedCharacterDTO implements Serializable {
+
+    @Schema(example = "1")
     private Long id;
+    @Schema(example = "Monkey D. Luffy")
     private String name;
+    @Schema(example = "19")
     private Integer age;
+    @Schema(example = "The future Pirate King")
     private String description;
+    @Schema(example = "[\"Gomu Gomu no Mi\", \"Haki\"]")
     private Set<String> abilities;
+    @Schema(example = "Captain")
     private String role;
+    @Schema
+    @JsonIgnore
     private CrewDTO crew;
 
     public ExposedCharacterDTO(Long id, String name, Integer age, String description, Set<String> abilities, String role, CrewDTO crew) {

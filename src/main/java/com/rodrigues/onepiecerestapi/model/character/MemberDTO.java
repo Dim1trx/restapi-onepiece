@@ -1,10 +1,15 @@
 package com.rodrigues.onepiecerestapi.model.character;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 public class MemberDTO implements Serializable {
+    @Schema(example = "2")
     private long id;
+    @Schema(example = "Roronoa Zoro")
     private String name;
+    @Schema(example = "Swordsman")
     private String role;
 
     public MemberDTO(long id, String name, String role) {

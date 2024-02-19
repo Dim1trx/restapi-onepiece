@@ -2,14 +2,18 @@ package com.rodrigues.onepiecerestapi.model.crew;
 
 import com.rodrigues.onepiecerestapi.model.character.Characters;
 import com.rodrigues.onepiecerestapi.model.character.MemberDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CrewDTO implements Serializable {
+    @Schema(example = "1")
     private long id;
+    @Schema(example = "Straw Hat Pirates")
     private String name;
+    @Schema
     private List<MemberDTO> members = new ArrayList<>();
 
     public CrewDTO(long id, String name, List<MemberDTO> members) {

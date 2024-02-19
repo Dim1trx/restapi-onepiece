@@ -1,15 +1,24 @@
 package com.rodrigues.onepiecerestapi.model.character;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 import java.util.Set;
 
 public class CharacterDTO implements Serializable {
+    @Schema(example = "3")
     private Long id;
+    @Schema(example = "Nami")
     private String name;
+    @Schema(example = "20")
     private Integer age;
+    @Schema(example = "Navigator and Cartographer")
     private String description;
+    @Schema(example = "[\"Cartography\", \"Navigation\"]")
     private Set<String> abilities;
+    @Schema(example = "Navigator")
     private String role;
+    @Schema(example = "1")
     private long crewId;
 
     public CharacterDTO(Long id, String name, Integer age, String description, Set<String> abilities, String role, long crew) {
