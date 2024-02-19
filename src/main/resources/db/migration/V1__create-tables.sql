@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS crew_members (
     crew_id BIGINT,
     members_id BIGINT,
     PRIMARY KEY (crew_id, members_id),
-    FOREIGN KEY (crew_id) REFERENCES crew(id),
-    FOREIGN KEY (members_id) REFERENCES characters(id)
+    FOREIGN KEY (crew_id) REFERENCES crew(id) ON DELETE CASCADE,
+    FOREIGN KEY (members_id) REFERENCES characters(id) ON DELETE CASCADE
 );
 

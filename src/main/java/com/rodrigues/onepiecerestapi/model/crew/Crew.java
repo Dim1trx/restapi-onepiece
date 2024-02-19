@@ -15,7 +15,7 @@ public class Crew implements Serializable {
     private Long id;
     @Column(unique = true, nullable = false)
     private String name;
-    @OneToMany
+    @OneToMany(mappedBy = "crew", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Characters> members;
 
     public Crew(Long id, String name, List<Characters> members) {
