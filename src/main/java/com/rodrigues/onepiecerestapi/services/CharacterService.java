@@ -2,9 +2,8 @@ package com.rodrigues.onepiecerestapi.services;
 
 import com.rodrigues.onepiecerestapi.model.character.CharacterDTO;
 import com.rodrigues.onepiecerestapi.model.character.Characters;
-import com.rodrigues.onepiecerestapi.model.character.ExposedCharacterDTO;
-import com.rodrigues.onepiecerestapi.model.crew.CrewDTO;
 import com.rodrigues.onepiecerestapi.repositories.CharacterRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,10 +12,11 @@ import java.util.List;
 public class CharacterService {
     private final CharacterRepository repository;
     private final CrewService service;
-
-    public CharacterService(CharacterRepository repository, CrewService service) {
+    private final ModelMapper mapper;
+    public CharacterService(CharacterRepository repository, CrewService service, ModelMapper mapper) {
         this.repository = repository;
         this.service = service;
+        this.mapper = mapper;
     }
 
     private boolean checkData(CharacterDTO data) {
@@ -27,41 +27,45 @@ public class CharacterService {
         return id <= 0;
     }
 
-    public List<ExposedCharacterDTO> findAll() {
+    public List<CharacterDTO> findAll() {
         var list = repository.findAll();
 
-        return list.stream().map(ExposedCharacterDTO::new).toList();
+        return list.stream().map(
+                obj -> mapper.map(obj, CharacterDTO.class)
+        ).toList();
     }
 
-    public ExposedCharacterDTO findById(long id) {
+    public List<CharacterDTO> findByCrewId(Long id) {
+        return repository.findByCrewId(id).stream().map(
+                obj -> mapper.map(obj, CharacterDTO.class)
+        ).toList();
+    }
+
+    public CharacterDTO findById(long id) {
         if(checkId(id)) throw new IllegalArgumentException("Invalid id");
 
         var obj = repository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("No records for id " + id)
         );
 
-        return new ExposedCharacterDTO(obj);
+        return mapper.map(obj, CharacterDTO.class);
     }
 
-
-    public ExposedCharacterDTO create(CharacterDTO data) {
+    public CharacterDTO create(CharacterDTO data) {
         if(checkData(data)) throw new IllegalArgumentException("Invalid data");
 
-        Characters obj = repository.save(new Characters(data));
+        Characters obj = repository.save(mapper.map(data, Characters.class));
 
         if (data.getCrewId() > 0) {
             var crew = service.addMember(data.getCrewId(), obj);
             obj.setCrew(crew);
-            Characters saved = repository.save(obj);
-
-            CrewDTO dto = new CrewDTO(crew);
-            return new ExposedCharacterDTO(saved, dto);
+            repository.save(obj);
         }
 
-        return new ExposedCharacterDTO(obj);
+        return mapper.map(obj, CharacterDTO.class);
     }
 
-    public ExposedCharacterDTO update(CharacterDTO data) {
+    public CharacterDTO update(CharacterDTO data) {
         if(checkId(data.getId())) throw new IllegalArgumentException("Invalid id");
         if(checkData(data)) throw new IllegalArgumentException("Invalid data");
 
@@ -79,9 +83,8 @@ public class CharacterService {
 
             repository.save(obj);
 
-            return new ExposedCharacterDTO(obj);
+            return mapper.map(obj, CharacterDTO.class);
         }
-
 
         return null;
     }
@@ -90,5 +93,4 @@ public class CharacterService {
     public void delete(long id) {
         repository.deleteById(id);
     }
-
 }

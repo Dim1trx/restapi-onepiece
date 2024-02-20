@@ -4,6 +4,8 @@ import com.rodrigues.onepiecerestapi.model.character.Characters;
 import com.rodrigues.onepiecerestapi.model.crew.Crew;
 import com.rodrigues.onepiecerestapi.model.crew.CrewDTO;
 import com.rodrigues.onepiecerestapi.repositories.CrewRepository;
+import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,9 +13,11 @@ import java.util.List;
 @Service
 public class CrewService {
     private final CrewRepository repository;
+    private final ModelMapper mapper;
 
-    public CrewService(CrewRepository repository) {
+    public CrewService(CrewRepository repository, ModelMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
     private boolean checkData(CrewDTO crew) {
@@ -27,7 +31,9 @@ public class CrewService {
     public List<CrewDTO> findAll() {
         var list = repository.findAll();
 
-        return list.stream().map(CrewDTO::new).toList();
+        return list.stream().map(
+                obj -> mapper.map(obj, CrewDTO.class)
+        ).toList();
     }
 
     public CrewDTO findById(long id) {
@@ -37,7 +43,7 @@ public class CrewService {
                 () -> new IllegalArgumentException("No records found for this ID" + id)
         );
 
-        return new CrewDTO(obj);
+        return mapper.map(obj, CrewDTO.class);
     }
 
 
@@ -65,7 +71,7 @@ public class CrewService {
 
         repository.save(obj);
 
-        return new CrewDTO(obj);
+        return mapper.map(obj, CrewDTO.class);
     }
 
     public void delete(long id) {
@@ -85,8 +91,11 @@ public class CrewService {
 
         return null;
     }
-
     public void removeMember(long id, Characters member) {
-        repository.findById(id).ifPresent(crew -> crew.getMembers().remove(member));
+        var crew = repository.findById(id).orElse(null);
+        if (crew != null) {
+            crew.getMembers().remove(member);
+            repository.save(crew);
+        }
     }
 }
