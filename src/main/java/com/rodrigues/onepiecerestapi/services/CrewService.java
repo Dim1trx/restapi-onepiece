@@ -4,7 +4,6 @@ import com.rodrigues.onepiecerestapi.model.character.Characters;
 import com.rodrigues.onepiecerestapi.model.crew.Crew;
 import com.rodrigues.onepiecerestapi.model.crew.CrewDTO;
 import com.rodrigues.onepiecerestapi.repositories.CrewRepository;
-import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
