@@ -1,7 +1,6 @@
 package com.rodrigues.onepiecerestapi.controllers;
 
 import com.rodrigues.onepiecerestapi.model.character.CharacterDTO;
-import com.rodrigues.onepiecerestapi.model.character.ExposedCharacterDTO;
 import com.rodrigues.onepiecerestapi.services.CharacterService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +35,7 @@ public class CharacterController {
                     @ApiResponse(description = "Successful operation", responseCode = "200",
                             content = {
                                     @Content(mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = ExposedCharacterDTO.class)))
+                                    array = @ArraySchema(schema = @Schema(implementation = CharacterDTO.class)))
                             }
                     ),
                     @ApiResponse(responseCode = "401", description = "Unauthorized"),
@@ -45,11 +43,15 @@ public class CharacterController {
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             }
     )
-    public ResponseEntity<List<ExposedCharacterDTO>> findAll() {
+    public ResponseEntity<List<CharacterDTO>> findAll(@RequestParam("crewId") Long id) {
+        if (id != null && id > 0) {
+            return ResponseEntity.ok().body(service.findByCrewId(id));
+        }
         var list = service.findAll();
 
         return ResponseEntity.ok().body(list);
     }
+
 
     @GetMapping(
             value = "/{id}",
@@ -62,7 +64,7 @@ public class CharacterController {
             responses = {
                     @ApiResponse(description = "Successful operation", responseCode = "200",
                             content = {
-                                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExposedCharacterDTO.class))
+                                    @Content(mediaType = "application/json", schema = @Schema(implementation = CharacterDTO.class))
                             }
                     ),
                     @ApiResponse(responseCode = "401", description = "Unauthorized"),
@@ -73,7 +75,7 @@ public class CharacterController {
                     @Parameter(name = "id", description = "Character id", required = true)
             }
     )
-    public ResponseEntity<ExposedCharacterDTO> findById(@PathVariable long id) {
+    public ResponseEntity<CharacterDTO> findById(@PathVariable long id) {
         return ResponseEntity.ok().body(service.findById(id));
     }
 
@@ -88,14 +90,14 @@ public class CharacterController {
             responses = {
                     @ApiResponse(description = "Successful operation", responseCode = "200",
                             content = {
-                                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExposedCharacterDTO.class))
+                                    @Content(mediaType = "application/json", schema = @Schema(implementation = CharacterDTO.class))
                             }
                     ),
                     @ApiResponse(responseCode = "401", description = "Unauthorized"),
                     @ApiResponse(responseCode = "404", description = "Not found"),
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             },
-            requestBody = @RequestBody(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Character to be created",
                     required = true,
                     content = @Content(
@@ -104,7 +106,7 @@ public class CharacterController {
                     )
             )
     )
-    public ResponseEntity<ExposedCharacterDTO> create(@RequestBody CharacterDTO character) {
+    public ResponseEntity<CharacterDTO> create(@RequestBody CharacterDTO character) {
         return ResponseEntity.ok().body(service.create(character));
     }
 
@@ -118,14 +120,14 @@ public class CharacterController {
             responses = {
                     @ApiResponse(description = "Successful operation", responseCode = "200",
                             content = {
-                                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExposedCharacterDTO.class))
+                                    @Content(mediaType = "application/json", schema = @Schema(implementation = CharacterDTO.class))
                             }
                     ),
                     @ApiResponse(responseCode = "401", description = "Unauthorized"),
                     @ApiResponse(responseCode = "404", description = "Not found"),
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             },
-            requestBody = @RequestBody(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Character to be updated",
                     required = true,
                     content = @Content(
@@ -134,7 +136,7 @@ public class CharacterController {
                     )
             )
     )
-    public ResponseEntity<ExposedCharacterDTO> update(@RequestBody CharacterDTO character) {
+    public ResponseEntity<CharacterDTO> update(@RequestBody CharacterDTO character) {
         return ResponseEntity.ok().body(service.update(character));
     }
 

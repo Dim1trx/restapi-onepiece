@@ -42,15 +42,6 @@ public class Characters implements Serializable {
         this.crew = crew;
     }
 
-    public Characters(CharacterDTO data) {
-        this.id = data.getId();
-        this.name = data.getName();
-        this.age = data.getAge();
-        this.description = data.getDescription();
-        this.abilities = data.getAbilities();
-        this.role = data.getRole();
-    }
-
     public Long getId() {
         return id;
     }

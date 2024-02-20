@@ -34,16 +34,6 @@ public class CharacterDTO implements Serializable {
     public CharacterDTO() {
     }
 
-    public CharacterDTO(Characters obj) {
-        this.id = obj.getId();
-        this.name = obj.getName();
-        this.age = obj.getAge();
-        this.description = obj.getDescription();
-        this.abilities = obj.getAbilities();
-        this.role = obj.getRole();
-        this.crewId = obj.getCrew().getId();
-    }
-
     public Long getId() {
         return id;
     }
