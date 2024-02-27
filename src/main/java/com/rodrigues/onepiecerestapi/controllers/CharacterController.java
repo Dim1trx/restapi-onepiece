@@ -2,6 +2,7 @@ package com.rodrigues.onepiecerestapi.controllers;
 
 import com.rodrigues.onepiecerestapi.model.character.CharacterDTO;
 import com.rodrigues.onepiecerestapi.services.CharacterService;
+import com.rodrigues.onepiecerestapi.util.MediaTypes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -26,7 +27,11 @@ public class CharacterController {
     }
 
     @GetMapping(
-            produces = "application/json"
+            produces = {
+                    MediaTypes.APPLICATION_JSON,
+                    MediaTypes.APPLICATION_XML,
+                    MediaTypes.APPLICATION_YAML
+            }
     )
     @Operation(
             description = "Find all characters",
@@ -41,9 +46,13 @@ public class CharacterController {
                     @ApiResponse(responseCode = "401", description = "Unauthorized"),
                     @ApiResponse(responseCode = "404", description = "Not found"),
                     @ApiResponse(responseCode = "500", description = "Internal server error")
+            },
+            parameters = {
+                    @Parameter(name = "crewId", description = "Crew id")
             }
+
     )
-    public ResponseEntity<List<CharacterDTO>> findAll(@RequestParam("crewId") Long id) {
+    public ResponseEntity<List<CharacterDTO>> findAll(@RequestParam(name = "crewId", required = false) Long id) {
         if (id != null && id > 0) {
             return ResponseEntity.ok().body(service.findByCrewId(id));
         }
@@ -55,7 +64,11 @@ public class CharacterController {
 
     @GetMapping(
             value = "/{id}",
-            produces = "application/json"
+            produces = {
+                    MediaTypes.APPLICATION_JSON,
+                    MediaTypes.APPLICATION_XML,
+                    MediaTypes.APPLICATION_YAML
+            }
     )
     @CrossOrigin(origins = "*")
     @Operation(
@@ -80,8 +93,16 @@ public class CharacterController {
     }
 
     @PostMapping(
-            consumes = "application/json",
-            produces = "application/json"
+            consumes = {
+                    MediaTypes.APPLICATION_JSON,
+                    MediaTypes.APPLICATION_XML,
+                    MediaTypes.APPLICATION_YAML
+            },
+            produces = {
+                    MediaTypes.APPLICATION_JSON,
+                    MediaTypes.APPLICATION_XML,
+                    MediaTypes.APPLICATION_YAML
+            }
     )
     @CrossOrigin(origins = "*")
     @Operation(
@@ -111,8 +132,16 @@ public class CharacterController {
     }
 
     @PutMapping(
-            consumes = "application/json",
-            produces = "application/json"
+            consumes = {
+                    MediaTypes.APPLICATION_JSON,
+                    MediaTypes.APPLICATION_XML,
+                    MediaTypes.APPLICATION_YAML
+            },
+            produces = {
+                    MediaTypes.APPLICATION_JSON,
+                    MediaTypes.APPLICATION_XML,
+                    MediaTypes.APPLICATION_YAML
+            }
     )
     @Operation(
             description = "Update a character by its id",

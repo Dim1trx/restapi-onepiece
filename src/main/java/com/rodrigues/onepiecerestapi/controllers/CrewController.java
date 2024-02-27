@@ -2,6 +2,7 @@ package com.rodrigues.onepiecerestapi.controllers;
 
 import com.rodrigues.onepiecerestapi.model.crew.CrewDTO;
 import com.rodrigues.onepiecerestapi.services.CrewService;
+import com.rodrigues.onepiecerestapi.util.MediaTypes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -26,7 +27,11 @@ public class CrewController {
     }
 
     @GetMapping(
-            produces = "application/json"
+            produces = {
+                    MediaTypes.APPLICATION_JSON,
+                    MediaTypes.APPLICATION_XML,
+                    MediaTypes.APPLICATION_YAML
+            }
     )
     @Operation(
             description = "Find all crews",
@@ -51,7 +56,11 @@ public class CrewController {
 
     @GetMapping(
             value = "/{id}",
-            produces = "application/json"
+            produces = {
+                    MediaTypes.APPLICATION_JSON,
+                    MediaTypes.APPLICATION_XML,
+                    MediaTypes.APPLICATION_YAML
+            }
     )
     @Operation(
             description = "Find a specific crew by its id",
@@ -75,8 +84,16 @@ public class CrewController {
     }
 
     @PostMapping(
-            consumes = "application/json",
-            produces = "application/json"
+            consumes = {
+                    MediaTypes.APPLICATION_JSON,
+                    MediaTypes.APPLICATION_XML,
+                    MediaTypes.APPLICATION_YAML
+            },
+            produces = {
+                    MediaTypes.APPLICATION_JSON,
+                    MediaTypes.APPLICATION_XML,
+                    MediaTypes.APPLICATION_YAML
+            }
     )
     @CrossOrigin(origins = "*")
     @Operation(
@@ -106,8 +123,16 @@ public class CrewController {
     }
 
     @PutMapping(
-            consumes = "application/json",
-            produces = "application/json"
+            consumes = {
+                    MediaTypes.APPLICATION_JSON,
+                    MediaTypes.APPLICATION_XML,
+                    MediaTypes.APPLICATION_YAML
+            },
+            produces = {
+                    MediaTypes.APPLICATION_JSON,
+                    MediaTypes.APPLICATION_XML,
+                    MediaTypes.APPLICATION_YAML
+            }
     )
     @Operation(
             description = "Update a crew by its id",
