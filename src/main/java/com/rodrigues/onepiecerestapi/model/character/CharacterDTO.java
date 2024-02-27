@@ -19,9 +19,9 @@ public class CharacterDTO implements Serializable {
     @Schema(example = "Navigator")
     private String role;
     @Schema(example = "1")
-    private long crewId;
+    private Long crewId;
 
-    public CharacterDTO(Long id, String name, Integer age, String description, Set<String> abilities, String role, long crew) {
+    public CharacterDTO(Long id, String name, Integer age, String description, Set<String> abilities, String role, Long crew) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -82,11 +82,11 @@ public class CharacterDTO implements Serializable {
         this.role = role;
     }
 
-    public long getCrewId() {
+    public Long getCrewId() {
         return crewId;
     }
 
-    public void setCrewId(long crewId) {
+    public void setCrewId(Long crewId) {
         this.crewId = crewId;
     }
 }

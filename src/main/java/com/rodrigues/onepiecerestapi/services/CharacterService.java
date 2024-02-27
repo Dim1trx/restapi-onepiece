@@ -2,6 +2,7 @@ package com.rodrigues.onepiecerestapi.services;
 
 import com.rodrigues.onepiecerestapi.model.character.CharacterDTO;
 import com.rodrigues.onepiecerestapi.model.character.Characters;
+import com.rodrigues.onepiecerestapi.model.crew.Crew;
 import com.rodrigues.onepiecerestapi.repositories.CharacterRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -54,9 +55,13 @@ public class CharacterService {
     public CharacterDTO create(CharacterDTO data) {
         if(checkData(data)) throw new IllegalArgumentException("Invalid data");
 
+        if(data.getCrewId() == null || data.getCrewId() < 1){
+            data.setCrewId(null);
+        }
+
         Characters obj = repository.save(mapper.map(data, Characters.class));
 
-        if (data.getCrewId() > 0) {
+        if (data.getCrewId() != null && data.getCrewId() > 0) {
             var crew = service.addMember(data.getCrewId(), obj);
             obj.setCrew(crew);
             repository.save(obj);
@@ -77,9 +82,7 @@ public class CharacterService {
             obj.setAbilities(data.getAbilities());
             obj.setRole(data.getRole());
 
-            if (data.getCrewId() <= 0) {
-                service.removeMember(data.getCrewId(), obj);
-            }
+            obj = checkForCrewUpdate(obj, data);
 
             repository.save(obj);
 
@@ -92,5 +95,31 @@ public class CharacterService {
 
     public void delete(long id) {
         repository.deleteById(id);
+    }
+
+    private Characters checkForCrewUpdate(Characters obj, CharacterDTO data) {
+        if(data.getCrewId() > 0){
+            if (obj.getCrew() == null) {
+                Crew crew = service.addMember(data.getCrewId(), obj);
+                obj.setCrew(crew);
+
+                return obj;
+            }
+            if (obj.getCrew() != null && obj.getCrew().getId() != data.getCrewId()) {
+                service.removeMember(obj.getCrew().getId(), obj);
+                Crew crew = service.addMember(data.getCrewId(), obj);
+                obj.setCrew(crew);
+
+                return obj;
+            }
+        }
+        else if (data.getCrewId() == 0 && obj.getCrew() != null) {
+            service.removeMember(obj.getCrew().getId(), obj);
+            obj.setCrew(null);
+
+            return obj;
+        }
+
+        throw new RuntimeException("Error while checking for Crew update");
     }
 }
